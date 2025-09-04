@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+faiss-cpu
+pypdf2
+python-multipart
+streamlit
+requests
+tiktoken
+rank_bm25
