@@ -26,8 +26,8 @@ async def ingest_pdf(file: UploadFile):
 
     # Split into chunks
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=100,
+        chunk_size=1000,
+        chunk_overlap=300,
         length_function=len,
         separators=["\n\n", "\n", ".", " ", ""]
     )
@@ -74,7 +74,7 @@ def build_hybrid_retriever(vectorstore: Chroma, use_cache: bool = True):
     if use_cache and _HYBRID_RETRIEVER is not None:
         return _HYBRID_RETRIEVER
 
-    dense_retriever = vectorstore.as_retriever(search_kwargs={"k": 20})
+    dense_retriever = vectorstore.as_retriever(search_kwargs={"k": 70})
     documents = _documents_from_chroma(vectorstore)
     sparse_retriever = BM25Retriever.from_documents(documents)
 
@@ -86,7 +86,7 @@ def build_hybrid_retriever(vectorstore: Chroma, use_cache: bool = True):
     _HYBRID_RETRIEVER = hybrid
     return hybrid
 
-def retrieve_context(vectorstore_or_hybrid, question: str, k: int = 3):
+def retrieve_context(vectorstore_or_hybrid, question: str, k: int = 10):
     if hasattr(vectorstore_or_hybrid, "get_relevant_documents"):
         hybrid = vectorstore_or_hybrid
     else:
